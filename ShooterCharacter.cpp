@@ -5,7 +5,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Gun.h"
 #include"Engine/DamageEvents.h"
-
+#include "Components/CapsuleComponent.h"
+#include "Simple_ShooterGameModeBase.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -13,7 +14,7 @@ AShooterCharacter::AShooterCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Health = MaxHealth;
-	GetCharacterMovement()->MaxWalkSpeed = 1000.f;
+	GetCharacterMovement()->MaxWalkSpeed = 700.f;
 
 }
 
@@ -32,6 +33,11 @@ bool AShooterCharacter::IsDead() const
 {
 	return Health <= 0  ;
 	//return false;
+}
+
+float AShooterCharacter::GetHealthPercentage() const
+{
+	return Health/MaxHealth;
 }
 
 // Called every frame
@@ -88,6 +94,16 @@ float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent cons
 	DamageToApply = FMath::Min(Health, DamageToApply);
 	Health -= DamageToApply;
 	UE_LOG(LogTemp, Warning, TEXT("Health is = %f"), Health);
+	if (IsDead()) {
+		ASimple_ShooterGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASimple_ShooterGameModeBase>();//to get the hold of the base base game mode class
+		if (GameMode != nullptr) {
+			GameMode->PawnKilled(this);
+		}
+		DetachFromControllerPendingDestroy();//from detaching from the player controller
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	 
+	}
 
 	return DamageToApply;
  }

@@ -16,5 +16,12 @@ class SIMPLE_SHOOTER_API AShooterAIController : public AAIController
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+	bool IsDead() const;
 
+	UPROPERTY(EditAnywhere)
+		//float AcceptanceRadius = 200;
+		class UBehaviorTree* AIBehavior;
 };

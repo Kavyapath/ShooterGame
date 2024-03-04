@@ -27,8 +27,13 @@ public:
 
 	UFUNCTION(BlueprintPure)
 		bool IsDead() const;
-	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintPure)
+		float GetHealthPercentage() const;
+
+
+	virtual void Tick(float DeltaTime) override;
+	void Shoot();
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	// Called to bind functionality to input
@@ -40,9 +45,9 @@ private:
 	void MoveRight(float AxisValue);
 	void LookUpRate(float AxisValue);
 	void LookRightRate(float AxisValue);
-	void Shoot();
+
 	UPROPERTY(EditAnywhere)
-		float RotationRate=100;
+		float RotationRate=150;
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AGun> GunClass;
 	UPROPERTY()
